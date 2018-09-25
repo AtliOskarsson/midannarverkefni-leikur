@@ -26,18 +26,28 @@ function Player(x, y, vel) {
   this.vel = 0;
 }
 
+let paddleHeight = 10;
+let paddleWidth = 75;
+let paddleX = (canvas.width-paddleWidth)/2;
+let paddleY = (canvas.height-paddleHeight)/2;
+document.addEventListener("mousemove", mouseMoveHandler, false);
+function mouseMoveHandler(e) {
+    var relativeX = e.clientX - canvas.offsetLeft;
+    var relativeY = e.clientY - canvas.offsetTop;
+    if(relativeX > 0 && relativeX < canvas.width) {
+        paddleX = relativeX - paddleWidth/2;
+    }
+    if(relativeY > 0 && relativeY < canvas.height) {
+        paddleY = relativeY - paddleHeight/2;
+    }
+    console.log(paddleX, paddleY)
+}
+
 Player.prototype.draw = function() {
-  ctx.drawImage(earth, this.x, this.y, 35, 35);
+  ctx.drawImage(earth, paddleX, paddleY, 35, 35);
   ctx.beginPath();
   ctx.fill();
 };
-
-Player.prototype.update = function() {
-
-  this.x += 0.1;
-  this.y += 0.1;
-  console.log(this.x)
-}
 
 // define Ball constructor
 
@@ -81,6 +91,7 @@ Ball.prototype.update = function() {
   this.y += this.velY;
 };
 
+document.addEventListener('contextmenu', event => event.preventDefault());
 // define ball collision detection
 
 Ball.prototype.collisionDetect = function() {
@@ -121,7 +132,6 @@ function loop() {
     balls.push(ball);
   }
   man.draw();
-  man.update();
   for(let i = 0; i < balls.length; i++) {
     balls[i].draw();
     balls[i].update();
@@ -130,7 +140,7 @@ function loop() {
     };
   }
   // Hægt og rólega leyfir fleiri object að vera til
-  max += 0.01;
+  max += 0.03;
   requestAnimationFrame(loop);
 }
 
